@@ -4,14 +4,42 @@
 
 using namespace rt;
 
-tl::optional<double> compute_sphere_hit_point(point const& center, double radius, ray const& r) {
+struct hit_record {
+    double time;
+    point hit_point;
+    direction normal;
+};
+
+class sphere {
+public:
+    point centre;
+    double radius;
+};
+
+class world {
+    std::vector<sphere> spheres;
+};
+
+tl::optional<hit_record> compute_sphere_hit_point(point const& center, double radius, ray const& r, double time_min, double time_max) {
     point oc = r.origin() - center;
     auto a = dot(r.heading(), r.heading());
     auto b = 2. * dot(oc, vec3_cast<point>(r.heading()));
     auto c = dot(oc, oc) - radius*radius;
     auto discriminant = b*b - 4*a*c;
     if (discriminant < 0) return tl::nullopt;
-    return (-b - sqrt(discriminant)) / (2. * a);
+
+    double possible_time = (-b - sqrt(b*b-4*a*c));
+    if (possible_time < time_max && possible_time > time_min) {
+        auto point = r.point_at_time(possible_time);
+        return hit_record{ possible_time, point, vec3_cast<direction>((point - center) / radius)};
+    }
+    possible_time = (-b - sqrt(b*b-4*a*c));
+    if (possible_time < time_max && possible_time > time_min) {
+        auto point = r.point_at_time(possible_time);
+        return hit_record{ possible_time, point, vec3_cast<direction>((point - center) / radius)};
+    }
+
+    return tl::nullopt;
 }
 
 color calculate_color(ray const& r) {
