@@ -1,18 +1,25 @@
 #include <iostream>
 #include "ray.hpp"
+#include "optional.hpp"
 
 using namespace rt;
 
-bool hit_sphere(point const& center, double radius, ray const& r) {
+tl::optional<double> compute_sphere_hit_point(point const& center, double radius, ray const& r) {
     point oc = r.origin() - center;
     auto a = dot(r.heading(), r.heading());
     auto b = 2. * dot(oc, vec3_cast<point>(r.heading()));
     auto c = dot(oc, oc) - radius*radius;
     auto discriminant = b*b - 4*a*c;
-    return discriminant > 0;
+    if (discriminant < 0) return tl::nullopt;
+    return (-b - sqrt(discriminant)) / (2. * a);
 }
 
 color calculate_color(ray const& r) {
+    auto possible_hit_point = compute_sphere_hit_point(point{0,0,-1}, .5, r);
+    if (possible_hit_point) {
+        auto normal = unit_vector(r.point_at_time(*possible_hit_point) - point{0,0,-1});
+        return color{normal.x()+1, normal.y()+1, normal.z()+1} * .5;
+    }
     auto unit_direction = unit_vector(r.heading());
     double t = 0.5 * (unit_direction.y() + 1.0);
     auto white = color{1,1,1};
