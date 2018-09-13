@@ -32,9 +32,9 @@ class vec3
         return std::sqrt(x()*x() + y()*y() + z()*z());
     }
 
-    T dot(vec3 const &lhs, vec3 const &rhs)
+    friend T dot(vec3 const &lhs, vec3 const &rhs)
     {
-        return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+        return lhs.x() * rhs.x() + lhs.y() * rhs.y() + lhs.z() * rhs.z();
     }
 
     vec3 &operator+=(vec3 const &rhs)
