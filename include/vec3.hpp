@@ -25,8 +25,12 @@ class vec3
     T const &b() const { return data_[2]; }
 
     vec3 operator-() const { return vec3{-data_[0], -data_[1], -data_[2]}; }
-    T &operator[](std::size_t n) { return data_[N]; }
-    T const &operator[](std::size_t n) const { return data_[N]; }
+    T &operator[](std::size_t n) { return data_[n]; }
+    T const &operator[](std::size_t n) const { return data_[n]; }
+
+    T length() const {
+        return std::sqrt(x()*x() + y()*y() + z()*z());
+    }
 
     T dot(vec3 const &lhs, vec3 const &rhs)
     {
@@ -94,49 +98,49 @@ class vec3
     {
         auto ret = lhs;
         ret += rhs;
-        return ret
+        return ret;
     }
     friend vec3 operator-(vec3 const &lhs, vec3 const &rhs)
     {
         auto ret = lhs;
         ret -= rhs;
-        return ret
+        return ret;
     }
     friend vec3 operator*(vec3 const &lhs, vec3 const &rhs)
     {
         auto ret = lhs;
         ret *= rhs;
-        return ret
+        return ret;
     }
     friend vec3 operator/(vec3 const &lhs, vec3 const &rhs)
     {
         auto ret = lhs;
         ret /= rhs;
-        return ret
+        return ret;
     }
     friend vec3 operator+(vec3 const &lhs, T rhs)
     {
         auto ret = lhs;
         ret += rhs;
-        return ret
+        return ret;
     }
     friend vec3 operator-(vec3 const &lhs, T rhs)
     {
         auto ret = lhs;
         ret -= rhs;
-        return ret
+        return ret;
     }
     friend vec3 operator*(vec3 const &lhs, T rhs)
     {
         auto ret = lhs;
         ret *= rhs;
-        return ret
+        return ret;
     }
     friend vec3 operator/(vec3 const &lhs, T rhs)
     {
         auto ret = lhs;
         ret /= rhs;
-        return ret
+        return ret;
     }
 
     friend vec3 unit_vector(vec3 const &v) { return v / v.length(); }
